@@ -24,7 +24,7 @@ function testSerial(callback) {
 }
 
 function setColor(callback, _loc, colorValue) {
-	colorstring = Array(11).join('6579300,') + '6579300';
+	colorstring = Array(250).join('789524,') + '3276800';
 	if(port === undefined) {
 		port = new SerialPort.SerialPort(_loc, {baudrate:9600});
 	}
