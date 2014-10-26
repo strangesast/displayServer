@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var serial = require('../serial');
+var route = require('../routing');
 
 
 /* GET home page. */
 router.post('/', function(req, res) {
 	var data = req.body;
 	var method = data.method;
+	console.log(data);
 	if(!data.method) {
 		res.send('invalid');
 	} else {
-		serial.test(cb);
+		route(data, cb);
 	}
 
 	function cb(obj) {
