@@ -5,8 +5,10 @@ function route(data, callback) {
 	var method = data.method;
   switch(method) {
 		case 'test':
-			console.log('made it here!!!')
-			serial.test(callback);
+			serial.location(function(_loc) {
+			  serial.test(callback, _loc, 0);
+		  });
+
 			break;
 
 		default:

@@ -1,4 +1,6 @@
 var SerialPort = require("serialport");
+var port;
+var inUse;
 
 function testSerial(callback) {
 	// return location of first Teensy device
@@ -21,7 +23,27 @@ function testSerial(callback) {
 	});
 }
 
+function setColor(callback, _loc, colorValue) {
+	colorstring = Array(11).join('6579300,') + '6579300';
+	if(port === undefined) {
+		port = new SerialPort.SerialPort(_loc, {baudrate:9600});
+	}
+	port.open(function (error) {
+		console.log(error);
+		if(!error) {
+  	  port.on('open', function() {
+  	  	console.log('open');
+  	    port.write(colorstring, function(err, results) {
+  	  		console.log('results');
+  	  		console.log(results);
+  	  	});
+  	  });
+		}
+	});
+}
+
 
 module.exports = {
-	'test': testSerial // return available ports
+	'location': testSerial, // return available ports
+	'test' : setColor
 };
