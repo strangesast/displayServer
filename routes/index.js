@@ -74,7 +74,10 @@ router.post('/', function(req, res) {
 	
 });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b4c53b125797611888b2904dce4f48b43de0388f
 router.get('/', function(req, res) {
 	res.render('index');
 });
