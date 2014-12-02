@@ -24,20 +24,21 @@ function testSerial(callback) {
 }
 
 function setColor(callback, _loc, colorValue) {
-	colorstring = Array(250).join('789524,') + '3276800';
+	colorstring = "<x2|y2|w8|v8|sW10,FFFFFF|tW|b70|>"
 	if(port === undefined) {
 		port = new SerialPort.SerialPort(_loc, {baudrate:9600});
 	}
 	port.open(function (error) {
-		console.log(error);
 		if(!error) {
   	  port.on('open', function() {
   	  	console.log('open');
   	    port.write(colorstring, function(err, results) {
   	  		console.log('results');
-  	  		console.log(results);
+  	  		callback('success');
   	  	});
   	  });
+		} else {
+			callback('failure');
 		}
 	});
 }

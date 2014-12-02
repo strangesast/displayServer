@@ -1,5 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  This is a scoreboard.  Post to interact.  
+
+  p Press 
+    a(onclick="testLeds(); return false;") here
+
+
+block scripts
+  script(src="/javascripts/index.js")
