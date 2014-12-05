@@ -11,11 +11,10 @@ function getLocations(callback, refresh) {
 	// run callback with Ports, refresh if refresh==true
 	if(Ports === undefined || refresh !== undefined) {
     SerialPort.list(function(err, rawPorts) {
-			var ports = [];
+			var ports = {};
 			for(var i=0; i<rawPorts.length; i++) {
 				var _loc = rawPorts[i].comName;
-				var _obj = {}; _obj[_loc] = new SerialPort.SerialPort(_loc);
-				ports.push(_obj);
+				ports[_loc] = new SerialPort.SerialPort(_loc);
 			}
 			Ports = ports;
 			callback(ports);
@@ -88,7 +87,12 @@ router.get('/', function(req, res) {
 	var exampleObject = {'x': 1, 'y': 1, 'w': 10, 'h': 10};
 	var string = buildString(exampleObject);
 	console.log(string);
-	writeString(function(_obj) {console.log(_obj);}, new SerialPort.SerialPort('/dev/pts/14'), string);
+	getLocations(function(ports) {
+		var list = Object.keys(ports);
+		for(var i=0;i<list.length;i++) {
+		  writeString(function(_obj) {console.log(_obj);}, ports[list[i]], string);
+		}
+	});
 	res.render('index');
 });
 
