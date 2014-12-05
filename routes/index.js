@@ -5,80 +5,59 @@ var route = require('../routing');
 
 var SerialPort = require("serialport");
 
-function getLocations(callback) {
-	// return array of serial device locations
-  SerialPort.list(function(err, ports) {
-		var deviceList = [];
-		for(var i=0; i<ports.length; i++){
-			var _port = ports[i];
-			var _location = _port.comName;
-			var _name = _port.pnpId;
-			deviceList.push({'name' : _name, 'location': _location});
-		}
-		callback(deviceList);
+var Ports;
+
+function getLocations(callback, refresh) {
+	// run callback with Ports, refresh if refresh==true
+	if(Ports === undefined || refresh !== undefined) {
+    SerialPort.list(function(err, rawPorts) {
+			var ports = [];
+			for(var i=0; i<rawPorts.length; i++) {
+				var _loc = rawPorts[i].comName;
+				var _obj = {}; _obj[_loc] = new SerialPort.SerialPort(_loc);
+				ports.push(_obj);
+			}
+			Ports = ports;
+			callback(ports);
+			console.log('fresh ports: ' + ports.length);
+		});
+
+	} else {
+		callback(Ports);
+	}
+}
+
+function writeString(callback, port, string) {
+	port.open(function(err) {
+		port.on('open', function() {
+			port.write(string, function(err, results) {
+				callback(err || results);
+			});
+		});
 	});
 }
 
-var busy;
 
-function writeString(callback, serialPortObject, string, clear) {
-	var clearStr = "<x0|y0|w120|h8|sW100,000000|tW|b70|>";
-	busy = true
-	function clearIt(bool, callback) {
-		if(bool) {
-		  serialPortObject.write(clearStr, 
-														 function(err, results) {callback();});
-	  } else {
-			console.log('toast');
-			callback();
-		}
+function buildString(obj) {
+	var str;
+	if(obj.type == "text") {
+
+	} else {
+  	str = '<' + ['x' + obj.x, 'y' + obj.y,
+			           'w' + (obj.x + obj.w),
+				         'v' + (obj.y + obj.h)].join('|') +'sw10,FF0000|tW|b70|'+ '>'
 	}
 
-	serialPortObject.open(function(err) {
-		if(!err) {
-			serialPortObject.on('open', function() {
-				clearIt(true, function() {
-				  serialPortObject.write(string, function(err, results) {
-				  	if(!err) {
-				  		callback('write success');
-				  	} else {
-				  		callback('error writing to serial');
-				  	}
-				  });
-				});
-
-			});
-
-		} else {
-			callback('error opening port');
-		}
-	});
-  busy = false;
+	return str
 }
 
-
-function test(callback, color) {
-	getLocations(function(ports) {
-		for(var i=0; i<ports.length; i++) {
-			console.log(ports[i].name + " at " + ports[i].location);
-			
-  		port = new SerialPort.SerialPort(ports[i].location, {baudrate:9600});
-			var str = "<x0|y0|w100|v8|sW10," + color.substring(0, 6) + "|tW|b70|>"
-			if(!busy){
-				writeString(callback, port, str, true);
-			} else {
-				callback('busy');
-			}
-		}
-	});
-}
 
 function update(callback, obj) {
 	var _x = obj.x;
 	var _y = obj.y;
 	var _w = obj.w + _x;
 	var _h = obj.h + _y;
-	var str = "<x" + _x + "|y" + _y + "|w" + _w + "|v" + _h + "|" + "sW10,FF0000|tW|b70|>";
+	var str = "<x" + _x + "|y" + _y + "|w" + _w + "|v" + _h + "|" + "|sW10,FF0000|tW|b70|>";
 	console.log(str);
 	getLocations(function(ports) {
 	  for(var i=0; i<ports.length; i++){
@@ -92,7 +71,7 @@ function update(callback, obj) {
 	});
 }
 
-var routing = {'test': test, 'update': update};
+var routing = {'update': update};
 
 router.post('/', function(req, res) {
 	var data = req.body;
@@ -106,6 +85,10 @@ router.post('/', function(req, res) {
 });
 
 router.get('/', function(req, res) {
+	var exampleObject = {'x': 1, 'y': 1, 'w': 10, 'h': 10};
+	var string = buildString(exampleObject);
+	console.log(string);
+	writeString(function(_obj) {console.log(_obj);}, new SerialPort.SerialPort('/dev/pts/14'), string);
 	res.render('index');
 });
 
@@ -137,3 +120,40 @@ module.exports = router;
 //	'location': testSerial, // return available ports
 //	'test' : setColor
 //};
+//
+//
+//
+//function writeString(callback, serialPortObject, string, clear) {
+//	var clearStr = "<x0|y0|w120|h8|sW100,000000|tW|b70|>";
+//	busy = true
+//	function clearIt(bool, callback) {
+//		if(bool) {
+//		  serialPortObject.write(clearStr, 
+//														 function(err, results) {callback();});
+//	  } else {
+//			console.log('toast');
+//			callback();
+//		}
+//	}
+//
+//	serialPortObject.open(function(err) {
+//		if(!err) {
+//			serialPortObject.on('open', function() {
+//				clearIt(true, function() {
+//				  serialPortObject.write(string, function(err, results) {
+//				  	if(!err) {
+//				  		callback('write success');
+//				  	} else {
+//				  		callback('error writing to serial');
+//				  	}
+//				  });
+//				});
+//
+//			});
+//
+//		} else {
+//			callback('error opening port');
+//		}
+//	});
+//  busy = false;
+//}
