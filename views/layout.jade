@@ -2,6 +2,26 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device.width, initial-scale=1")
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/layout.css')
+    block links
+      
   body
-    block content
+    .container
+      .page-header 
+        if title
+          h1.cover-heading=title
+            small  Configuration
+        else
+          h1="undefined"
+
+    
+      block content
+
+
+    script(src='/components/jquery/dist/jquery.min.js')
+    block scripts
+      script(src='/components/bootstrap/dist/js/bootstrap.js')
