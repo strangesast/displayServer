@@ -10,7 +10,7 @@ block content
   if ports.length
     .list-group
     for port in ports
-      a.list-group-item 
+      a.list-group-item(kind='port-list-item', name='#{port.comName}')
         h3.list-group-item-heading #{port.comName} 
         p.list-group-item-text
           i #{port.manufacturer}

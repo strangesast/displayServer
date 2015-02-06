@@ -15,6 +15,9 @@ html
         if title
           h1.cover-heading=title
             small  Configuration
+            if path
+              for item in path
+                small  > #{item}
         else
           h1="undefined"
 
