@@ -3,12 +3,14 @@ var router = express.Router();
 var Promise = require('es6-promise').Promise;
 var serialPort = require('serialport');
 var config = require('../config');
-var t = require('displayLibJS');
+//var t = require('../displayComponents/displayLibJS/DisplayLib')
 
-var testPort = {
-	'comName' : '/dev/tty0',
-	'pnpId' : 'this.is.a.test.port',
-	'manufacturer' : 'me!'
+function testPort(comNumber) { 
+	return {
+	  'comName' : '/dev/tty' + comNumber,
+	  'pnpId' : 'this.is.a.test.port',
+	  'manufacturer' : 'me!'
+	}
 }
 
 // list of available port objects
@@ -48,11 +50,11 @@ function refreshAvailablePorts() {
 	  serialPort.list(function(err, ports) {
 			Ports = ports; // probably a bad idea
 			// for testing...
-			Ports.push(testPort)
-			Ports.push(testPort)
-			Ports.push(testPort)
-			Ports.push(testPort)
-			Ports.push(testPort)
+			Ports.push(testPort(0))
+			Ports.push(testPort(1))
+			Ports.push(testPort(2))
+			Ports.push(testPort(3))
+			Ports.push(testPort(4))
 			resolve(ports);  // should add if err above, no reject
 	  });
 	});
@@ -86,6 +88,7 @@ router.get('/comName/:portId', function(req, res) {
 	var ids = req.params.portId.split('+');
 	var requestedPorts = [];
 
+	// load ports then
 	p.then(function(ports) {
 		// match portId with comName
 	  for(var i=0; i<ports.length; i++) {
