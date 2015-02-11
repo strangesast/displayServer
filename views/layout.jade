@@ -13,11 +13,11 @@ html
     .container
       .page-header 
         if title
-          h1.cover-heading=title
-            small  Configuration
-            if path
-              for item in path
-                small  > #{item}
+          h1.cover-heading
+            a(href='/') #{title}
+
+            block paths
+
         else
           h1="undefined"
 

@@ -50,11 +50,6 @@ function refreshAvailablePorts() {
 	  serialPort.list(function(err, ports) {
 			Ports = ports; // probably a bad idea
 			// for testing...
-			Ports.push(testPort(0))
-			Ports.push(testPort(1))
-			Ports.push(testPort(2))
-			Ports.push(testPort(3))
-			Ports.push(testPort(4))
 			resolve(ports);  // should add if err above, no reject
 	  });
 	});
@@ -64,13 +59,21 @@ function refreshAvailablePorts() {
 router.get('/', function(req, res) {
 	var availPorts = refreshAvailablePorts(); // return promise with ports
 	var obj = {};
+	obj.title = config.name;
+	res.render('index', obj);
+});
+
+router.get('/config', function(req, res) {
+	var availPorts = refreshAvailablePorts(); // return promise with ports
+	var obj = {};
 
 	availPorts.then(function(ports) {
+		console.log(ports);
 		obj.ports = ports;
 		obj.title = config.name;
 		// match portId with comName
 
-		res.render('index', obj);
+		res.render('configure', obj);
 	},
 	function(error) {
 		console.log('error');

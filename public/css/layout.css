@@ -1,2 +1,7 @@
 .container {
+	max-width: 600px;
+}
+
+.a {
+	color: inherit;
 }

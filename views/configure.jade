@@ -1,0 +1,32 @@
+extends layout
+
+block links
+  link(rel='stylesheet', href='/css/index.css')
+
+block content
+
+  h3 Available Ports
+
+  if ports.length
+    .list-group
+    for port in ports
+      a.list-group-item(kind='port-list-item', name='#{port.comName}')
+        h3.list-group-item-heading #{port.comName} 
+        p.list-group-item-text
+          i #{port.manufacturer}
+    hr
+
+    .text-center
+      .btn-group(role="group")
+        a#configure.btn.btn-default Configure
+        a#test.btn.btn-primary Test
+  else
+    p
+      i No ports available.
+
+block paths
+  small  > 
+    a(href='/config') Configure
+
+block scripts
+  script(src="/javascripts/configure.js")
