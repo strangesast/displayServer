@@ -88,6 +88,9 @@ var scoreboard = scoreboard || (function(_canvasObject) {
 		var h = this.height*this.pixelSize;
 		if(w != this.parentCanvas.width) this.parentCanvas.width = w;
 		if(h != this.parentCanvas.height) this.parentCanvas.height = h;
+		this.context.fillStyle = "white";
+		this.context.fillRect(0, 0, this.width*this.pixelSize, this.height*this.pixelSize);
+		this.context.fillStyle = "black";
 	}
 
 	Display.prototype.draw = function() {
@@ -110,6 +113,17 @@ var scoreboard = scoreboard || (function(_canvasObject) {
 		'changePixelSize' : function(_s) {
 			dw.pixelSize = _s;
 			dw.draw();
+		},
+		'addObject' : function(_x, _y, _text) {
+			dw.addChild(new TextShape(dw, _x, _y, _text));
+			dw.draw();
+		},
+		'clearObjects' : function() {
+			dw.children = [];
+			dw.draw();
+		},
+		'listObjects' : function() {
+			return dw.children;
 		}
 	}
 });
