@@ -110,6 +110,11 @@ var scoreboard = scoreboard || (function(_canvasObject) {
 
 	return {
 		'draw' : function() { dw.draw()},
+		'incr' : function(_up) {
+			if(_up) dw.pixelSize < 10 ? dw.pixelSize++ : null;
+			else dw.pixelSize > 1 ? dw.pixelSize-- : null;
+			dw.draw();
+		},
 		'changePixelSize' : function(_s) {
 			dw.pixelSize = _s;
 			dw.draw();

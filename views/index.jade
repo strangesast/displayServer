@@ -6,10 +6,14 @@ block links
 block content
 
   h3 Preview
-  canvas#boardPreview
-  hr
-  a(href='/config') Configure
+  .btn-group(role="group")
+    button.btn.btn-default(onClick="s.incr(true);", parent="boardPreview") + 
+    button.btn.btn-default(onClick="s.incr(false);") - 
+    a(href='/config').btn.btn-primary Configure
 
+  hr
+
+  canvas#boardPreview
 block scripts
   script(src="/javascripts/font.js")
   script(src="/javascripts/canvasScoreboard.js")
