@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h3 Link a new server!
+  .input-group
+    span.input-group-addon Hostname
+    input(type="text", placeholder="scoreboard server address").form-control
+    span.input-group-addon Port
+    input(type="number", placeholder="scoreboard server address").form-control
+
+    .input-group-btn
+      button.btn.btn-default(type="button", onclick="") New Connection
+
+block scripts
+  script(src="/javascripts/connections.js")
