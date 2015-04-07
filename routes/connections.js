@@ -17,8 +17,8 @@ router.route('/')
 	console.log(body);
 	if('connection' in body) {
 		var con = body.connection;
-		var = con.host;
-	  var = con.port;
+		var host = con.host;
+	  var port = con.port;
 		initiateConnection(host, port).then(function(connection) {
 			connection.on('message', function(message) {
 				console.log(message);
