@@ -15,8 +15,10 @@ var submit = function() {
     dataType: 'json'
   }).done(function(data) {
     console.log(data);
+
   }).fail(function(err) {
     console.log(err);
+
   })
 } 
 
@@ -28,5 +30,13 @@ var full = 'ws://127.0.0.1:8083';
 var socket = new WebSocket(full);
 
 socket.onmessage = function(message) {
-  console.log(message);
+  var data;
+  try {
+    data = message.data;
+  } catch(e) {
+    data = message;
+  };
+
+  console.log(data);
+
 }

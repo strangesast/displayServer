@@ -38,17 +38,23 @@ router.route('/')
       console.log('here');
 			connection.on('error', function(err) {
         console.log('err');
-        wss.broadcast(JSON.stringify(err));
+        wss.broadcast(err);
 			});
-      connection.on('message', function(message) {
-        console.log('message');
-        wss.broadcast(JSON.stringify(message));
-      });
 
       connection.on('connect', function(message) {
-        console.log('connect');
-        wss.broadcast(JSON.stringify(message));
+
+        connection.on('message', function(message) {
+          console.log('message');
+          wss.broadcast(message);
+        });
+
+        
+        wss.broadcast('connected');
       });
+
+      connection.on('end', function() {
+        wss.broadcast('end');
+      })
 
       res.json();
 		}, function(err) {
@@ -63,11 +69,9 @@ router.route('/')
 var initiateConnection = function(host, port) {
 	return new Promise(function(resolve, reject) {
     console.log('attempting to connect on ' + host + ' ' + port);
-    var connection = net.createConnection({host: host, port: port}, function(err, socket) {
-      console.log(socket);
-    });
-
-		resolve(connection);
+    var socket = new JsonSocket(new net.Socket());
+    socket.connect(port, host);
+    resolve(socket);
 	})
 
 }
