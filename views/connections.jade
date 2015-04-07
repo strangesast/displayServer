@@ -4,12 +4,12 @@ block content
   h3 Link a new server!
   .input-group
     span.input-group-addon Hostname
-    input(type="text", placeholder="scoreboard server address").form-control
+    input(type="text", placeholder="scoreboard server address")#host.form-control
     span.input-group-addon Port
-    input(type="number", placeholder="scoreboard server address").form-control
+    input(type="number", placeholder="scoreboard server address")#port.form-control
 
     .input-group-btn
-      button.btn.btn-default(type="button", onclick="") New Connection
+      button.btn.btn-default(type="button", onclick="submit(); return false;") New Connection
 
 block scripts
   script(src="/javascripts/connections.js")
