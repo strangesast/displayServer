@@ -26,6 +26,7 @@ router.post('/', function(req, res) {
   clear_cmd.display_request = display_lib.DisplayRequest.DISPLAY_CLEAR;
   clear_cmd.update_type = display_lib.UpdateType.UPDATE_ALL;
   clear_cmd.panel = display_lib.GenericScope.GS_APPLIES_TO_ALL;
+  clear_cmd.bright_level = 10;
   clear_cmd.is_final = 1;
   
   
