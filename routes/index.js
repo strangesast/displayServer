@@ -5,9 +5,14 @@ var display_addon = require('displayControlAddon/build/Release/displayaddon.node
 var display_lib = require('displayLibJS')
 
 
-router.post('/', function(req, res) {
-  var name = req.body.name
+router.all('/', function(req, res, next) {
+  var name = 'name' in req.body ? req.body.name : 'blank';
+  var ip = 'ip' in req.body ? req.body.ip : '127.0.0.1';
+  var port = 'port' in req.body ? req.body.port : '1001';
+  var brightness = 'brightness' in req.body ? req.body.brightness : '10';
 
+
+  console.log([name, ip, port])
   var panel_l = display_lib.DLPanelDef();
   panel_l.panel_location = new display_lib.XYInfo(0,0,60,32);
   panel_l.total_size = new display_lib.XYInfo(0,0,120,32);
@@ -26,7 +31,7 @@ router.post('/', function(req, res) {
   clear_cmd.display_request = display_lib.DisplayRequest.DISPLAY_CLEAR;
   clear_cmd.update_type = display_lib.UpdateType.UPDATE_ALL;
   clear_cmd.panel = display_lib.GenericScope.GS_APPLIES_TO_ALL;
-  clear_cmd.bright_level = 10;
+  clear_cmd.bright_level = Number(brightness);
   clear_cmd.is_final = 1;
   
   
@@ -85,7 +90,9 @@ router.post('/', function(req, res) {
   }
   
   
-  display_addon.set_emulator ("192.168.0.13", 1001);
+  //display_addon.set_emulator (ip, port);
+  display_addon.set_emulator (ip, Number(port));
+
   console.log ("about to write");
   var result = panel_l.BuildMessage ();
   var send_buf = result.result_buffer.slice(0,result.result_bytes);
