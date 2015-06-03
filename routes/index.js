@@ -5,7 +5,13 @@ var display_addon = require('displayControlAddon/build/Release/displayaddon.node
 var display_lib = require('displayLibJS')
 
 
-router.all('/', function(req, res, next) {
+router.route('/').get(function(req, res, next) {
+  res.send({})
+
+})
+
+router.route('/test')
+.all(function(req, res, next) {
   var name = 'name' in req.body ? req.body.name : 'blank';
   var ip = 'ip' in req.body ? req.body.ip : '127.0.0.1';
   var port = 'port' in req.body ? req.body.port : '1001';

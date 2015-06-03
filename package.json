@@ -18,5 +18,8 @@
     "ws": "^0.7.1",
     "displayControlAddon" : "file:../node-scoreboardDisplay/displayaddon/",
     "displayLibJS" : "strangesast/displayLibJS"
+  },
+  "engines": {
+    "npm" : "2.10.x"
   }
 }
